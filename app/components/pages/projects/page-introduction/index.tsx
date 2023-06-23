@@ -24,5 +24,3 @@ export const PageIntroduction = () => {
     </section>
   )
 }
-
-// 6:15
