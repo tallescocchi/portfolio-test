@@ -14,7 +14,7 @@ export const WorkExperience = () => {
           trabalhar juntos para criar soluções incríveis.
         </p>
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
         <ExperienceItem />
         <ExperienceItem />
       </div>
