@@ -27,6 +27,17 @@ const getPageData = async (): Promise<HomePageData> => {
         name
         startDate
       }
+      highlightProjects {
+        slug
+        thumbnail {
+          url
+        }
+        title
+        shortDescription
+        technologies {
+          name
+        }
+      }
     }
   }
 `
@@ -39,8 +50,8 @@ export default async function Home() {
   return (
     <>
       <HeroSection homeInfo={pageData} />
-      <KnownTechs />
-      <HighLightedProjects />
+      <KnownTechs techs={pageData.knownTechs} />
+      <HighLightedProjects projects={pageData.highlightProjects} />
       <WorkExperience />
     </>
   )
