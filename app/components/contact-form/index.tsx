@@ -6,6 +6,10 @@ import { SectionTitle } from '../section-title'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
+import { motion } from 'framer-motion'
+import { fadeUpAnimation } from '@/app/lib/animations'
 
 const contactFormSchema = z.object({
   name: z.string().min(3).max(100),
@@ -16,12 +20,27 @@ const contactFormSchema = z.object({
 type ContactFormData = z.infer<typeof contactFormSchema>
 
 export const ContactForm = () => {
-  const { handleSubmit, register } = useForm<ContactFormData>({
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
   })
 
-  const onSubmit = (data: ContactFormData) => {
-    console.log(data)
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      await axios.post('/api/contact', data)
+      toast.success(
+        'Mensagem enviada com sucesso! Aguarde que retorno em breve.',
+      )
+      reset()
+    } catch {
+      toast.error(
+        'Ocorreu um erro para enviar a mensagem! Tente novamente em alguns minutos.',
+      )
+    }
   }
 
   return (
@@ -35,9 +54,10 @@ export const ContactForm = () => {
           title="Vamos trabalhar juntos? Entre em contato"
           className="items-center text-center"
         />
-        <form
+        <motion.form
           onSubmit={handleSubmit(onSubmit)}
           className="mt-12 w-full flex flex-col gap-4"
+          {...fadeUpAnimation}
         >
           <input
             placeholder="Nome"
@@ -57,11 +77,14 @@ export const ContactForm = () => {
             {...register('message')}
           />
 
-          <Button className="w-max mx-auto mt-6 shadow-button">
+          <Button
+            className="w-max mx-auto mt-6 shadow-button"
+            disabled={isSubmitting}
+          >
             Enviar Mensagem
             <HiArrowNarrowRight size={18} />
           </Button>
-        </form>
+        </motion.form>
       </div>
     </section>
   )
